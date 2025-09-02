@@ -31,7 +31,7 @@ model = train_model()
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title("🏥 Medical Insurance Cost Prediction")
+st.title(" Medical Insurance Cost Prediction")
 st.write("Enter details below to estimate your medical expenses:")
 
 age = st.number_input("Age", min_value=18, max_value=100, step=1)
