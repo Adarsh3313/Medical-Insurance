@@ -4,11 +4,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
 # -----------------------------
-# Load dataset and train model
+# Train model (cached)
 # -----------------------------
-@st.cache_resource  # cache so training happens only once
+@st.cache_resource
 def train_model():
-    df = pd.read_csv("insurance.csv")
+    # 🔹 Replace this with your own GitHub raw link if needed
+    url = "https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv"
+    df = pd.read_csv("https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv")
+
     df_encoded = pd.get_dummies(df, drop_first=True)
 
     X = df_encoded.drop("expenses", axis=1)
@@ -27,11 +30,9 @@ model = train_model()
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title(" Medical Insurance Cost Prediction")
+st.title("Medical Insurance Cost Prediction")
+st.write("Enter details below to estimate your medical expenses:")
 
-st.write("Fill in the details below to estimate your medical expenses:")
-
-# User Inputs
 age = st.number_input("Age", min_value=18, max_value=100, step=1)
 sex = st.selectbox("Sex", ["male", "female"])
 bmi = st.number_input("BMI (Body Mass Index)", min_value=10.0, max_value=60.0, step=0.1)
@@ -56,4 +57,4 @@ input_data = pd.DataFrame(
 # Prediction
 if st.button("Predict Expense"):
     prediction = model.predict(input_data)[0]
-    st.success(f"Estimated Medical Expense: ${prediction:,.2f}")
+    st.success(f" Estimated Medical Expense: ${prediction:,.2f}")
