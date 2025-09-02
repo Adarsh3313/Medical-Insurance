@@ -8,14 +8,15 @@ from sklearn.ensemble import RandomForestRegressor
 # -----------------------------
 @st.cache_resource
 def train_model():
-    # 🔹 Replace this with your own GitHub raw link if needed
+    # Public dataset with "charges" column
     url = "https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv"
-    df = pd.read_csv("https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv")
+    df = pd.read_csv(url)
 
     df_encoded = pd.get_dummies(df, drop_first=True)
 
-    X = df_encoded.drop("expenses", axis=1)
-    y = df_encoded["expenses"]
+    # Target column is "charges" (not expenses)
+    X = df_encoded.drop("charges", axis=1)
+    y = df_encoded["charges"]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -30,7 +31,7 @@ model = train_model()
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title("Medical Insurance Cost Prediction")
+st.title("🏥 Medical Insurance Cost Prediction")
 st.write("Enter details below to estimate your medical expenses:")
 
 age = st.number_input("Age", min_value=18, max_value=100, step=1)
@@ -57,4 +58,4 @@ input_data = pd.DataFrame(
 # Prediction
 if st.button("Predict Expense"):
     prediction = model.predict(input_data)[0]
-    st.success(f" Estimated Medical Expense: ${prediction:,.2f}")
+    st.success(f"💰 Estimated Medical Expense: ${prediction:,.2f}")
