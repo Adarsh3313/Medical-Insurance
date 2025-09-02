@@ -1,11 +1,32 @@
 import streamlit as st
 import pandas as pd
-import pickle
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
 
-# Load trained model
-with open("model.pkl", "rb") as f:
-    model = pickle.load(f)
+# -----------------------------
+# Load dataset and train model
+# -----------------------------
+@st.cache_resource  # cache so training happens only once
+def train_model():
+    df = pd.read_csv("insurance.csv")
+    df_encoded = pd.get_dummies(df, drop_first=True)
 
+    X = df_encoded.drop("expenses", axis=1)
+    y = df_encoded["expenses"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+    return model
+
+model = train_model()
+
+# -----------------------------
+# Streamlit UI
+# -----------------------------
 st.title(" Medical Insurance Cost Prediction")
 
 st.write("Fill in the details below to estimate your medical expenses:")
