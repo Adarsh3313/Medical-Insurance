@@ -57,5 +57,9 @@ input_data = pd.DataFrame(
 
 # Prediction
 if st.button("Predict Expense"):
-    prediction = model.predict(input_data)[0]
-    st.success(f"💰 Estimated Medical Expense: ${prediction:,.2f}")
+    prediction_usd = model.predict(input_data)[0]
+    
+    # Convert USD → INR (approx. 1 USD = 83 INR)
+    prediction_inr = prediction_usd * 83  
+    
+    st.success(f"Estimated Medical Expense: ₹{prediction_inr:,.2f}")
